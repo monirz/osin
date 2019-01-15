@@ -8,9 +8,11 @@ import (
 type Server struct {
 	Config            *ServerConfig
 	Storage           Storage
+	AccessRequest     AccessRequest
 	AuthorizeTokenGen AuthorizeTokenGen
 	AccessTokenGen    AccessTokenGen
 	Now               func() time.Time
+	Logger            Logger
 }
 
 // NewServer creates a new server instance
@@ -21,6 +23,7 @@ func NewServer(config *ServerConfig, storage Storage) *Server {
 		AuthorizeTokenGen: &AuthorizeTokenGenDefault{},
 		AccessTokenGen:    &AccessTokenGenDefault{},
 		Now:               time.Now,
+		Logger:            &LoggerDefault{},
 	}
 }
 

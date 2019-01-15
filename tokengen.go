@@ -1,7 +1,10 @@
 package osin
 
 import (
+	"crypto/rand"
 	"encoding/base64"
+	"encoding/hex"
+	"log"
 
 	"github.com/pborman/uuid"
 )
@@ -22,8 +25,15 @@ type AccessTokenGenDefault struct {
 
 // GenerateAccessToken generates base64-encoded UUID access and refresh tokens
 func (a *AccessTokenGenDefault) GenerateAccessToken(data *AccessData, generaterefresh bool) (accesstoken string, refreshtoken string, err error) {
-	token := uuid.NewRandom()
-	accesstoken = base64.RawURLEncoding.EncodeToString([]byte(token))
+
+	key := make([]byte, 32)
+
+	_, err = rand.Read(key)
+	if err != nil {
+		log.Println(err)
+	}
+
+	accesstoken = hex.EncodeToString(key)
 
 	if generaterefresh {
 		rtoken := uuid.NewRandom()
