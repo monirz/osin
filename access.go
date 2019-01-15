@@ -148,7 +148,7 @@ func (s *Server) HandleAccessRequest(w *Response, r *http.Request) *AccessReques
 
 	}
 
-	grantType := AccessRequestType(r.FormValue("grant_type"))
+	grantType := AccessRequestType(string(ar.Type))
 	if s.Config.AllowedAccessTypes.Exists(grantType) {
 		switch grantType {
 		case AUTHORIZATION_CODE:

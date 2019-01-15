@@ -6,11 +6,12 @@ package main
 import (
 	"crypto/rsa"
 	"fmt"
-	"github.com/RangelReale/osin"
-	"github.com/RangelReale/osin/example"
-	"github.com/dgrijalva/jwt-go"
 	"net/http"
 	"net/url"
+
+	"github.com/RangelReale/osin"
+	"github.com/RangelReale/osin/example"
+	jwt "github.com/dgrijalva/jwt-go"
 )
 
 // JWT access token generator
@@ -21,6 +22,7 @@ type AccessTokenGenJWT struct {
 
 func (c *AccessTokenGenJWT) GenerateAccessToken(data *osin.AccessData, generaterefresh bool) (accesstoken string, refreshtoken string, err error) {
 	// generate JWT access token
+
 	token := jwt.NewWithClaims(jwt.SigningMethodRS256, jwt.MapClaims{
 		"cid": data.Client.GetId(),
 		"exp": data.ExpireAt().Unix(),
@@ -120,7 +122,7 @@ func main() {
 	http.HandleFunc("/appauth/code", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 
-		code := r.Form.Get("code")
+		code := r.FormValue("code")
 
 		w.Write([]byte("<html><body>"))
 		w.Write([]byte("APP AUTH - CODE<br/>"))
@@ -138,7 +140,7 @@ func main() {
 			url.QueryEscape("http://localhost:14000/appauth/code"), url.QueryEscape(code))
 
 		// if parse, download and parse json
-		if r.Form.Get("doparse") == "1" {
+		if r.FormValue("doparse") == "1" {
 			err := example.DownloadAccessToken(fmt.Sprintf("http://localhost:14000%s", aurl),
 				&osin.BasicAuth{"1234", "aabbccdd"}, jr)
 			if err != nil {
