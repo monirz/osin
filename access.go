@@ -41,7 +41,6 @@ type AccessRequest struct {
 	Assertion       string
 	ClientSecret    string `json:"client_secret"`
 	ClientID        string `json:"client_id"`
-
 	// Set if request is authorized
 	Authorized bool
 
@@ -130,7 +129,9 @@ func (s *Server) HandleAccessRequest(w *Response, r *http.Request) *AccessReques
 	ar := AccessRequest{}
 
 	contentType := r.Header.Get("Content-type")
-	if contentType == "application/json" {
+	log.Println(contentType)
+
+	if strings.Contains(contentType, "application/json") {
 		decoder := json.NewDecoder(r.Body)
 		err := decoder.Decode(&ar)
 		if err != nil {
