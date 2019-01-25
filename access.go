@@ -526,9 +526,9 @@ func (s *Server) FinishAccessRequest(w *Response, r *http.Request, ar *AccessReq
 			}
 			w.Storage.RemoveAccess(ret.AccessData.AccessToken)
 		}
-
 		// output data
 		w.Output["access_token"] = ret.AccessToken
+		w.Output["user_id"] = ret.UserData.(string)
 		w.Output["token_type"] = s.Config.TokenType
 		w.Output["expires_in"] = ret.ExpiresIn
 		if ret.RefreshToken != "" {
